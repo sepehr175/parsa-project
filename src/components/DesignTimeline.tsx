@@ -60,7 +60,7 @@ export default function DesignTimeline() {
   return (
     <section>
       <SectionHeading>Design Timeline</SectionHeading>
-      <div className="relative w-full" style={{ aspectRatio: `${CANVAS_W} / ${CANVAS_H}` }}>
+      <div className="relative w-full hidden lg:block" style={{ aspectRatio: `${CANVAS_W} / ${CANVAS_H}` }}>
         {/* Week header row */}
         <div
           className="absolute inset-x-0 top-0 grid grid-cols-4 gap-[2px]"
@@ -130,12 +130,32 @@ export default function DesignTimeline() {
 
       {/* Compact stacked list of phases for small screens, where the
           absolutely-positioned staircase above is hidden. */}
-      <div className="flex flex-col gap-2 mt-4 lg:hidden">
-        {phases.map((phase) => (
-          <div key={phase.label} className="bg-[#0b172d] rounded-2xl px-6 py-4">
-            <p className="text-sm font-bold leading-5 text-white">{phase.label}</p>
-          </div>
-        ))}
+      <div className="lg:hidden flex flex-col gap-3">
+        <div className="grid grid-cols-2 gap-2">
+          {weeks.map((w) => (
+            <div key={w} className="bg-[#f6f7f9] rounded-2xl p-4 min-h-[72px] flex items-center">
+              <p className="text-sm leading-5 text-[#202631] break-words">{w}</p>
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {details.map((col, i) => (
+            <div key={i} className="bg-[#f6f7f9] rounded-2xl p-4 flex flex-col gap-3">
+              {col.map((item, j) => (
+                <p key={j} className={item.compact ? "text-xs leading-4 text-[#202631]" : "text-xs leading-[17px] text-[#202631] break-words"}>
+                  {item.lines.join(" ")}
+                </p>
+              ))}
+            </div>
+          ))}
+        </div>
+        <div className="flex flex-col gap-2">
+          {phases.map((phase) => (
+            <div key={phase.label} className="bg-[#0b172d] rounded-2xl px-4 py-3">
+              <p className="text-sm font-bold leading-5 text-white break-words">{phase.label}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

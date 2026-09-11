@@ -108,7 +108,7 @@ export default function DesignProcess() {
             proportions so the interlock, the 16px white gap, and the
             text offset never drift, regardless of the rendered width. */}
         <div
-          className="relative w-full bg-white"
+          className="relative hidden lg:block w-full bg-white"
           style={{ aspectRatio: `${CANVAS_W} / ${HEADER_H}` }}
         >
           {steps.map((step, i) => (
@@ -127,7 +127,23 @@ export default function DesignProcess() {
             </div>
           ))}
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-[2px]">
+
+        <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {steps.map((step) => (
+            <div key={step.num} className="rounded-2xl overflow-hidden bg-[#f6f7f9]">
+              <div className="bg-[#0b172d] text-white p-4 flex flex-col gap-1">
+                <p className="text-base font-bold leading-6">{step.num}</p>
+                <p className="text-sm font-bold leading-5 break-words">{step.title}</p>
+                <p className="text-xs leading-[18px] text-white/90">{step.subtitle}</p>
+              </div>
+              <div className="p-4 flex flex-col gap-3 text-xs leading-[18px] text-[#202631]">
+                {step.items.map((item) => <p key={item} className="break-words">{item}</p>)}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="hidden lg:grid grid-cols-5 gap-[2px]">
           {steps.map((step) => (
             <div
               key={step.num}

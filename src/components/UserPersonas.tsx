@@ -133,7 +133,7 @@ function PersonaCard({ p }: { p: Persona }) {
           panel sits at the top-left/bottom-left of the whole card)
         - Fill: #F9F9F9  -> bg-[#f9f9f9]
       */}
-      <div className="relative flex flex-col justify-end gap-6 p-6 bg-[#f9f9f9] min-h-[320px] lg:min-h-0">
+      <div className="relative flex flex-col justify-end gap-4 sm:gap-6 p-4 sm:p-6 bg-[#f9f9f9] min-h-[680px] sm:min-h-[720px] md:min-h-[760px] lg:min-h-0">
         {/*
           Photo frame: bleeds edge-to-edge (inset-0), matching the reference —
           the 24px frame padding belongs to the quote card below, not the
@@ -143,37 +143,66 @@ function PersonaCard({ p }: { p: Persona }) {
         */}
         <div className="absolute inset-0 overflow-hidden">
           {/*
-            object-cover alone only scales the image up to the MINIMUM size
-            needed to fill the box (no gaps) — it stops there. Figma's crop is
-            tighter than that minimum (the photo is zoomed in further, e.g. to
-            push background elements like wall frames further out of view), so
-            we add an extra scale() on top of object-cover, controlled per
-            photo by p.photoZoom (falls back to IMAGE_ZOOM).
-
-            The pan is controlled by p.photoFocusY (0 = top, 100 = bottom,
-            defaults to 0). object-position and transform-origin are both set
-            to that SAME point (50% focusY%) on purpose: object-position picks
-            which point of the photo sits at that spot in the box, and
-            transform-origin zooms around that exact spot — so the zoom
-            expands outward from the point you're panned to, instead of
-            fighting the pan.
-
-            These numbers are a visual approximation, tuned photo-by-photo
-            against reference screenshots — nudge photoZoom / photoFocusY on
-            the specific persona in the array above if one still doesn't line
-            up exactly. The precise fix is reading the actual Scale %/offset
-            Figma has set on that layer's image fill, once the MCP rate limit
-            resets.
+            Keep the desktop image exactly as before.
+            Mobile/tablet gets a separate art-directed image so its crop can be
+            tuned without changing desktop at all.
           */}
           <img
             src={p.photo}
             alt={p.name}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="hidden lg:block absolute inset-0 w-full h-full object-cover"
             style={{
               objectPosition: `50% ${p.photoFocusY ?? 0}%`,
               transform: `scale(${p.photoZoom ?? IMAGE_ZOOM}, ${p.photoZoomY ?? p.photoZoom ?? IMAGE_ZOOM})`,
               transformOrigin: `50% ${p.photoFocusY ?? 0}%`,
             }}
+          />
+
+          {/* Tablet: keep the existing tablet crop exactly as it was. */}
+          <img
+            src={p.photo}
+            alt={p.name}
+            className={`hidden md:max-lg:block absolute inset-0 w-full h-full object-cover ${
+              p.name === "James Bennett"
+                ? "[object-position:50%_22%]"
+                : p.name === "Priya & Vikram Sharma"
+                  ? "[object-position:50%_18%]"
+                  : "[object-position:50%_30%]"
+            }`}
+          />
+
+          {/*
+            Mobile only: art-directed independently from tablet/desktop.
+            The goal is to crop away the empty headroom while keeping the
+            subject centered and preserving a useful amount of the body.
+          */}
+          <img
+            src={p.photo}
+            alt={p.name}
+            className="md:hidden absolute inset-0 w-full h-full object-cover"
+            style={
+              p.name === "James Bennett"
+                ? {
+                    // Mobile only: show the full head/shoulders and keep the
+                    // framing around the upper body instead of cutting the top.
+                    objectPosition: "50% 38%",
+                    transform: "scale(1.10)",
+                    transformOrigin: "50% 42%",
+                  }
+                : p.name === "Priya & Vikram Sharma"
+                  ? {
+                      // Mobile only: keep the top of both heads visible while
+                      // retaining a slightly tighter family portrait crop.
+                      objectPosition: "50% 40%",
+                      transform: "scale(1.20)",
+                      transformOrigin: "50% 44%",
+                    }
+                  : {
+                      objectPosition: "50% 62%",
+                      transform: "scale(1.30)",
+                      transformOrigin: "50% 68%",
+                    }
+            }
           />
         </div>
         {/*
@@ -184,22 +213,28 @@ function PersonaCard({ p }: { p: Persona }) {
           beneath it (per-persona via p.quoteMarginBottom, default 16px).
         */}
         <div
-          className="relative backdrop-blur-[16px] bg-[#0F172B5C] rounded-2xl p-4 w-full flex gap-2 items-center"
-          style={{ marginBottom: p.quoteMarginBottom ?? 16 }}
+          className="absolute left-4 right-4 bottom-6 sm:left-6 sm:right-6 sm:bottom-8 lg:relative lg:left-auto lg:right-auto lg:bottom-auto backdrop-blur-[16px] bg-[#0F172B5C] rounded-2xl p-4 sm:p-5 lg:p-4 w-auto lg:w-full min-w-0 flex gap-3 lg:gap-2 items-center"
+          style={{ marginBottom: Math.max(24, p.quoteMarginBottom ?? 16) }}
         >
           {/* آیکون نقل‌قول بازشو (چپ) */}
-          <svg className="shrink-0 self-start rotate-180" width="11" height="140" viewBox="0 0 11 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg className="hidden lg:block shrink-0 self-start rotate-180" width="11" height="140" viewBox="0 0 11 140" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5.38991 131.545V133.386C5.38991 133.909 5.28764 134.443 5.0831 134.989C4.88423 135.528 4.61719 136.04 4.28196 136.523C3.94673 137 3.58026 137.406 3.18253 137.741L1.58026 136.795C1.86435 136.347 2.11435 135.849 2.33026 135.304C2.55185 134.759 2.66264 134.125 2.66264 133.403V131.545H5.38991ZM9.67685 131.545V133.386C9.67685 133.909 9.57457 134.443 9.37003 134.989C9.17117 135.528 8.90412 136.04 8.56889 136.523C8.23366 137 7.86435 137.406 7.46094 137.741L5.85866 136.795C6.14844 136.347 6.40128 135.849 6.61719 135.304C6.83878 134.759 6.94957 134.125 6.94957 133.403V131.545H9.67685Z" fill="white"/>
           </svg>
           
-          <p className="flex-1 text-lg font-bold leading-7 text-white">{p.quote}</p>
+          <span className="lg:hidden absolute left-4 top-3 text-3xl leading-none font-bold text-white select-none">“</span>
+
+          <p className="min-w-0 flex-1 text-[15px] sm:text-lg lg:text-lg font-bold leading-6 sm:leading-7 text-white break-words px-8 sm:px-10 lg:px-0">{p.quote}</p>
+
+          <span className="lg:hidden absolute right-4 bottom-2 text-3xl leading-none font-bold text-white select-none">”</span>
           
           {/* آیکون نقل‌قول بسته‌شو (راست) */}
-          <svg className="shrink-0 self-end" width="11" height="140" viewBox="0 0 11 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg className="hidden lg:block shrink-0 self-end" width="11" height="140" viewBox="0 0 11 140" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5.38991 131.545V133.386C5.38991 133.909 5.28764 134.443 5.0831 134.989C4.88423 135.528 4.61719 136.04 4.28196 136.523C3.94673 137 3.58026 137.406 3.18253 137.741L1.58026 136.795C1.86435 136.347 2.11435 135.849 2.33026 135.304C2.55185 134.759 2.66264 134.125 2.66264 133.403V131.545H5.38991ZM9.67685 131.545V133.386C9.67685 133.909 9.57457 134.443 9.37003 134.989C9.17117 135.528 8.90412 136.04 8.56889 136.523C8.23366 137 7.86435 137.406 7.46094 137.741L5.85866 136.795C6.14844 136.347 6.40128 135.849 6.61719 135.304C6.83878 134.759 6.94957 134.125 6.94957 133.403V131.545H9.67685Z" fill="white"/>
           </svg>
         </div>
       </div>
+
+      {/* Mobile/tablet art-direction only. Desktop keeps the existing Figma crop untouched. */}
 
       {/* Details panel */}
       <div className="bg-[#f6f7f9] p-6 sm:p-10 flex flex-col gap-6">
@@ -211,17 +246,17 @@ function PersonaCard({ p }: { p: Persona }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <div className="flex flex-col gap-2">
             <div className="bg-white rounded-2xl p-6 flex flex-col gap-4 text-xs leading-[18px]">
-              <div className="flex items-center justify-between">
+              <div className="flex items-start justify-between gap-3 min-w-0">
                 <span className="font-normal text-[#1e1e1e]">Age</span>
                 <span className="font-bold text-[#1e1e1e]">{p.age}</span>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-start justify-between gap-3 min-w-0">
                 <span className="font-normal text-[#1e1e1e]">Location</span>
-                <span className="font-bold text-[#1e1e1e] text-right">{p.location}</span>
+                <span className="font-bold text-[#1e1e1e] text-right min-w-0 max-w-[68%] break-words">{p.location}</span>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-start justify-between gap-3 min-w-0">
                 <span className="font-normal text-[#1e1e1e]">Job</span>
-                <span className="font-bold text-[#1e1e1e] text-right">{p.job}</span>
+                <span className="font-bold text-[#1e1e1e] text-right min-w-0 max-w-[68%] break-words">{p.job}</span>
               </div>
             </div>
             <div className="bg-white rounded-2xl p-6 flex flex-col gap-3">

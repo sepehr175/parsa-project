@@ -51,7 +51,7 @@ export default function CompetitiveMatrix() {
   return (
     <section>
       <SectionHeading>Competitive Landscape Matrix</SectionHeading>
-      <div className="overflow-x-auto">
+      <div className="hidden lg:block overflow-x-auto">
         <div className="min-w-[900px] flex flex-col gap-[2px]">
           {/* Header row */}
           <div className="flex gap-[2px]">
@@ -89,7 +89,19 @@ export default function CompetitiveMatrix() {
             </div>
           ))}
         </div>
-      </div>
-    </section>
+  </div>
+      <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {rows.map((row) => (
+          <article key={row[0]} className="bg-[#f6f7f9] rounded-2xl p-4 flex flex-col gap-3 min-w-0">
+            <h3 className="text-base font-bold leading-6 text-[#202631] break-words">{row[0]}</h3>
+            {columns.slice(1).map((column, i) => (
+              <div key={column} className="bg-white rounded-xl p-3 min-w-0">
+                <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">{column}</p>
+                <p className="text-xs leading-[18px] text-[#202631] break-words">{row[i + 1]}</p>
+              </div>
+            ))}
+          </article>
+        ))}
+      </div>   </section>
   );
 }

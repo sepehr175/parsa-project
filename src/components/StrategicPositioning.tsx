@@ -64,25 +64,25 @@ export default function StrategicPositioning() {
 
           {/* axis labels */}
           <p
-            className="absolute text-xs leading-[18px] text-[#5c7b99] text-center"
+            className="absolute text-[10px] sm:text-xs leading-[16px] sm:leading-[18px] text-[#5c7b99] text-center"
             style={{ left: pct(188), top: pct(24), width: pct(220) }}
           >
             High Digital Interactivity & Tools
           </p>
           <p
-            className="absolute text-xs leading-[18px] text-[#5c7b99] text-center"
+            className="absolute text-[10px] sm:text-xs leading-[16px] sm:leading-[18px] text-[#5c7b99] text-center"
             style={{ left: pct(190), top: pct(554), width: pct(216) }}
           >
             Static / Form-Gated Experience
           </p>
           <p
-            className="absolute text-xs leading-[18px] text-[#5c7b99]"
+            className="absolute text-[10px] sm:text-xs leading-[16px] sm:leading-[18px] text-[#5c7b99]"
             style={{ left: pct(24), top: pct(291), width: pct(220) }}
           >
             Local / UK-Only Focus
           </p>
           <p
-            className="absolute text-xs leading-[18px] text-[#5c7b99] text-right"
+            className="absolute text-[10px] sm:text-xs leading-[16px] sm:leading-[18px] text-[#5c7b99] text-right"
             style={{ left: pct(431), top: pct(291), width: pct(141) }}
           >
             Global / Expat Focus
@@ -100,15 +100,15 @@ export default function StrategicPositioning() {
                 }}
               />
               <div
-                className="absolute text-xs leading-[18px] text-center w-[220px]"
+                className="absolute text-[9px] sm:text-xs leading-[14px] sm:leading-[18px] text-center w-[140px] sm:w-[180px] lg:w-[220px]"
                 style={{
                   left: pct(d.left),
                   top: `calc(${pct(d.top)} + 14px)`,
                   transform: "translateX(-50%)",
                 }}
               >
-                <span className="font-bold text-[#303b49] block">{d.name}</span>
-                <span className="font-normal text-[#303b49] block">{d.sub}</span>
+                <span className="font-bold text-[#303b49] block break-words">{d.name}</span>
+                <span className="font-normal text-[#303b49] block break-words">{d.sub}</span>
               </div>
             </div>
           ))}

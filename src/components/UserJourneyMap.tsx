@@ -236,21 +236,20 @@ function JourneyCard({ j }: { j: Journey }) {
               className={`w-full h-full object-cover ${j.imageClass || "object-center"}`} 
             />
           </div>
-          <h3 className="flex-1 text-2xl font-bold leading-9 text-[#202631]">
+          <h3 className="min-w-0 flex-1 text-xl sm:text-2xl font-bold leading-7 sm:leading-9 text-[#202631] break-words">
             {j.name} - {j.role}
           </h3>
         </div>
-        <p className="text-sm leading-5 text-[#202631]">
+        <p className="text-sm leading-5 text-[#202631] break-words">
           <span className="font-bold">Scenario</span>: {j.scenario}
         </p>
-        <p className="text-sm leading-5 text-[#202631]">
+        <p className="text-sm leading-5 text-[#202631] break-words">
           <span className="font-bold">Goal</span>: {j.goal}
         </p>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="hidden lg:block overflow-x-auto">
         <div className="min-w-[1100px] flex flex-col gap-[2px]">
-          {/* Header row */}
           <div className="flex gap-[2px]">
             <div className="bg-[#edeef2] flex-1 p-6 text-xs font-bold leading-[18px] text-[#202631] rounded-tl-[24px]">
               Stage
@@ -318,6 +317,49 @@ function JourneyCard({ j }: { j: Journey }) {
             </div>
           ))}
         </div>
+      </div>
+
+      <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {j.stages.map((stage) => (
+          <article key={stage.stage} className="bg-[#f6f7f9] rounded-2xl p-4 flex flex-col gap-2 min-w-0">
+            <div className="bg-[#0b172d] text-white rounded-xl px-4 py-3">
+              <p className="text-sm font-bold leading-5 break-words">{stage.stage}</p>
+            </div>
+
+            <div className="bg-white rounded-xl p-3">
+              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">User Action</p>
+              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.action}</p>
+            </div>
+
+            <div className="bg-white rounded-xl p-3">
+              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">Feeling</p>
+              <div className="flex items-center gap-2">
+                <span className="text-3xl leading-9">{stage.emoji}</span>
+                <span className="text-xs font-bold leading-[18px] text-[#202631] break-words">{stage.feeling}</span>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl p-3">
+              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">Thinking</p>
+              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.thinking}</p>
+            </div>
+
+            <div className="bg-white rounded-xl p-3">
+              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">Touchpoints</p>
+              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.touchpoints}</p>
+            </div>
+
+            <div className="bg-white rounded-xl p-3">
+              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">Pain Point / Friction</p>
+              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.pain}</p>
+            </div>
+
+            <div className="bg-white rounded-xl p-3">
+              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">UX Opportunity</p>
+              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.opportunity}</p>
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   );
