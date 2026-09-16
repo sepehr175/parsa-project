@@ -7,6 +7,11 @@ import StrategicPositioning from "@/components/StrategicPositioning";
 import UserPersonas from "@/components/UserPersonas";
 import EmpathyMap from "@/components/EmpathyMap";
 import UserJourneyMap from "@/components/UserJourneyMap";
+import InformationArchitecture from "@/components/InformationArchitecture";
+import TypographyColors from "@/components/TypographyColors";
+import DesignSystemSection from "@/components/DesignSystemSection";
+import WireframeSection from "@/components/WireframeSection";
+import WireframesSection from "@/components/WireframesSection";
 
 export default function Home() {
   return (
@@ -20,6 +25,11 @@ export default function Home() {
       <UserPersonas />
       <EmpathyMap />
       <UserJourneyMap />
+      <InformationArchitecture />
+      <TypographyColors />
+      <DesignSystemSection />
+      <WireframeSection />
+      <WireframesSection />
     </main>
   );
 }

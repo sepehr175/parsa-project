@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #202631;
+  --font-cabinet: "Inter", sans-serif;
 }
 
 @theme inline {

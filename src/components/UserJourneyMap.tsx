@@ -15,7 +15,6 @@ type Journey = {
   name: string;
   role: string;
   photo: string;
-  // این پراپرتی اضافه شد تا پوزیشن و زوم عکس‌ها دقیقاً مثل بخش قبلی کنترل بشه
   imageClass?: string;
   scenario: string;
   goal: string;
@@ -26,7 +25,6 @@ const journeys: Journey[] = [
   {
     name: "Tariq Al-Mansoor",
     role: "The Overseas Wealth Builder",
-    // عکس با مسیر فایل لوکال پابلیک جایگزین شد
     photo: "/6a57e43f2aa4a1891d9951d14c50e5646b6f044e.png",
     imageClass: "object-center",
     scenario:
@@ -90,8 +88,7 @@ const journeys: Journey[] = [
     name: "Priya & Vikram Sharma",
     role: "The Relocating Family",
     photo: "https://www.figma.com/api/mcp/asset/cd9bc764-841e-44e0-ad11-e0127e9fc884.png",
-    // تنظیمات زوم و پوزیشن دقیقاً مثل Empathy Map
-    imageClass: "object-top scale-[1.15] origin-top", 
+    imageClass: "object-top scale-[1.15] origin-top",
     scenario:
       "Priya & Vikram are relocating from Mumbai to the UK for their children's education and need to purchase a property while sorting out schooling and visa logistics.",
     goal: "Find an area with top school catchments, understand buying steps, and bundle property advisory with relocation support.",
@@ -152,7 +149,6 @@ const journeys: Journey[] = [
     name: "James Bennett",
     role: "The Domestic Portfolio Optimizer",
     photo: "https://www.figma.com/api/mcp/asset/7eaff3c8-854e-42b4-8c3e-c555f82c1842.png",
-    // تنظیمات زوم و پوزیشن دقیقاً مثل Empathy Map
     imageClass: "object-top scale-[1.25] origin-top",
     scenario:
       "James is an experienced UK landlord whose profit margins are squeezed by interest rate hikes; he needs to audit yields and strategically sell underperforming units.",
@@ -221,144 +217,155 @@ const rowLabels = [
   "UX Opportunity",
 ];
 
-function JourneyCard({ j }: { j: Journey }) {
+function JourneyTable({ j }: { j: Journey }) {
   const lastRow = rowLabels.length - 1;
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-[15px]">
-        <div className="flex items-start gap-3">
-          {/* دایره‌ها دقیقاً روی سایز 36 در 36 قفل شدند */}
+    <div className="hidden lg:block overflow-x-auto w-full">
+      <div className="min-w-[1100px] flex flex-col gap-[2px]">
+        <div className="flex gap-[2px]">
+          <div className="bg-[#edeef2] flex-1 p-6 text-xs font-bold leading-[18px] text-[#202631] rounded-tl-[24px]">
+            Stage
+          </div>
+          {j.stages.map((s, i) => (
+            <div
+              key={s.stage}
+              className={`bg-[#edeef2] flex-1 p-6 text-xs font-bold leading-[18px] text-[#202631] whitespace-nowrap ${
+                i === j.stages.length - 1 ? "rounded-tr-[24px]" : ""
+              }`}
+            >
+              {s.stage}
+            </div>
+          ))}
+        </div>
+
+        {rowLabels.map((label, rowIdx) => (
+          <div key={label} className="flex gap-[2px]">
+            <div
+              className={`bg-[#edeef2] flex-1 p-6 text-xs font-bold leading-[18px] text-[#202631] ${
+                rowIdx === lastRow ? "rounded-bl-[24px]" : ""
+              }`}
+            >
+              {label}
+            </div>
+            {j.stages.map((s, colIdx) => {
+              let content: React.ReactNode;
+              switch (label) {
+                case "User Action":
+                  content = s.action;
+                  break;
+                case "Feeling":
+                  content = (
+                    <span className="flex flex-col gap-2">
+                      <span className="text-[36px] leading-[48px]">{s.emoji}</span>
+                      <span className="font-bold">{s.feeling}</span>
+                    </span>
+                  );
+                  break;
+                case "Thinking":
+                  content = s.thinking;
+                  break;
+                case "Touchpoints":
+                  content = s.touchpoints;
+                  break;
+                case "Pain Point / Friction":
+                  content = s.pain;
+                  break;
+                case "UX Opportunity":
+                  content = s.opportunity;
+                  break;
+              }
+              const isLastCell = rowIdx === lastRow && colIdx === j.stages.length - 1;
+              return (
+                <div
+                  key={s.stage}
+                  className={`bg-[#f9f9f9] flex-1 p-6 text-xs leading-[18px] text-[#202631] ${
+                    isLastCell ? "rounded-br-[24px]" : ""
+                  }`}
+                >
+                  {content}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function JourneyStageCard({ stage }: { stage: Stage }) {
+  return (
+    <article className="min-w-0 rounded-[20px] border border-[#e6e8ec] bg-[#f6f7f9] p-3.5 sm:p-4 flex flex-col gap-2.5">
+      <div className="bg-[#0b172d] text-white rounded-[14px] px-3.5 py-3 min-h-[48px] flex items-center">
+        <p className="text-sm font-bold leading-5 break-words">{stage.stage}</p>
+      </div>
+
+      <div className="bg-white rounded-[14px] p-3 min-w-0">
+        <p className="text-[10px] sm:text-[11px] font-bold leading-4 text-[#68727f] mb-1">User Action</p>
+        <p className="text-xs sm:text-[13px] leading-[18px] text-[#202631] break-words">{stage.action}</p>
+      </div>
+
+      <div className="bg-white rounded-[14px] p-3 min-w-0">
+        <p className="text-[10px] sm:text-[11px] font-bold leading-4 text-[#68727f] mb-1">Feeling</p>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="text-3xl leading-9 shrink-0">{stage.emoji}</span>
+          <span className="text-xs sm:text-[13px] font-bold leading-[18px] text-[#202631] break-words">{stage.feeling}</span>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-[14px] p-3 min-w-0">
+        <p className="text-[10px] sm:text-[11px] font-bold leading-4 text-[#68727f] mb-1">Thinking</p>
+        <p className="text-xs sm:text-[13px] leading-[18px] text-[#202631] break-words">{stage.thinking}</p>
+      </div>
+
+      <div className="bg-white rounded-[14px] p-3 min-w-0">
+        <p className="text-[10px] sm:text-[11px] font-bold leading-4 text-[#68727f] mb-1">Touchpoints</p>
+        <p className="text-xs sm:text-[13px] leading-[18px] text-[#202631] break-words">{stage.touchpoints}</p>
+      </div>
+
+      <div className="bg-white rounded-[14px] p-3 min-w-0">
+        <p className="text-[10px] sm:text-[11px] font-bold leading-4 text-[#68727f] mb-1">Pain Point / Friction</p>
+        <p className="text-xs sm:text-[13px] leading-[18px] text-[#202631] break-words">{stage.pain}</p>
+      </div>
+
+      <div className="bg-white rounded-[14px] p-3 min-w-0">
+        <p className="text-[10px] sm:text-[11px] font-bold leading-4 text-[#68727f] mb-1">UX Opportunity</p>
+        <p className="text-xs sm:text-[13px] leading-[18px] text-[#202631] break-words">{stage.opportunity}</p>
+      </div>
+    </article>
+  );
+}
+
+function JourneyCard({ j }: { j: Journey }) {
+  return (
+    <div className="flex flex-col gap-5 sm:gap-6 lg:gap-4">
+      <div className="flex flex-col gap-3.5 sm:gap-[15px]">
+        <div className="flex items-start gap-3 min-w-0">
           <div className="w-[36px] h-[36px] rounded-full border-[3px] border-white overflow-hidden shrink-0 shadow-sm relative">
-            <img 
-              src={j.photo} 
-              alt={j.name} 
-              // اعمال کلاس‌های زوم و پوزیشن دقیق
-              className={`w-full h-full object-cover ${j.imageClass || "object-center"}`} 
+            <img
+              src={j.photo}
+              alt={j.name}
+              className={`w-full h-full object-cover ${j.imageClass || "object-center"}`}
             />
           </div>
-          <h3 className="min-w-0 flex-1 text-xl sm:text-2xl font-bold leading-7 sm:leading-9 text-[#202631] break-words">
+          <h3 className="min-w-0 flex-1 text-[20px] sm:text-2xl lg:text-2xl font-bold leading-7 sm:leading-9 text-[#202631] break-words">
             {j.name} - {j.role}
           </h3>
         </div>
-        <p className="text-sm leading-5 text-[#202631] break-words">
+        <p className="text-[13px] sm:text-sm leading-5 text-[#202631] break-words">
           <span className="font-bold">Scenario</span>: {j.scenario}
         </p>
-        <p className="text-sm leading-5 text-[#202631] break-words">
+        <p className="text-[13px] sm:text-sm leading-5 text-[#202631] break-words">
           <span className="font-bold">Goal</span>: {j.goal}
         </p>
       </div>
 
-      <div className="hidden lg:block overflow-x-auto">
-        <div className="min-w-[1100px] flex flex-col gap-[2px]">
-          <div className="flex gap-[2px]">
-            <div className="bg-[#edeef2] flex-1 p-6 text-xs font-bold leading-[18px] text-[#202631] rounded-tl-[24px]">
-              Stage
-            </div>
-            {j.stages.map((s, i) => (
-              <div
-                key={s.stage}
-                className={`bg-[#edeef2] flex-1 p-6 text-xs font-bold leading-[18px] text-[#202631] whitespace-nowrap ${
-                  i === j.stages.length - 1 ? "rounded-tr-[24px]" : ""
-                }`}
-              >
-                {s.stage}
-              </div>
-            ))}
-          </div>
+      <JourneyTable j={j} />
 
-          {rowLabels.map((label, rowIdx) => (
-            <div key={label} className="flex gap-[2px]">
-              <div
-                className={`bg-[#edeef2] flex-1 p-6 text-xs font-bold leading-[18px] text-[#202631] ${
-                  rowIdx === lastRow ? "rounded-bl-[24px]" : ""
-                }`}
-              >
-                {label}
-              </div>
-              {j.stages.map((s, colIdx) => {
-                let content: React.ReactNode;
-                switch (label) {
-                  case "User Action":
-                    content = s.action;
-                    break;
-                  case "Feeling":
-                    content = (
-                      <span className="flex flex-col gap-2">
-                        <span className="text-[36px] leading-[48px]">{s.emoji}</span>
-                        <span className="font-bold">{s.feeling}</span>
-                      </span>
-                    );
-                    break;
-                  case "Thinking":
-                    content = s.thinking;
-                    break;
-                  case "Touchpoints":
-                    content = s.touchpoints;
-                    break;
-                  case "Pain Point / Friction":
-                    content = s.pain;
-                    break;
-                  case "UX Opportunity":
-                    content = s.opportunity;
-                    break;
-                }
-                const isLastCell = rowIdx === lastRow && colIdx === j.stages.length - 1;
-                return (
-                  <div
-                    key={s.stage}
-                    className={`bg-[#f9f9f9] flex-1 p-6 text-xs leading-[18px] text-[#202631] ${
-                      isLastCell ? "rounded-br-[24px]" : ""
-                    }`}
-                  >
-                    {content}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {j.stages.map((stage) => (
-          <article key={stage.stage} className="bg-[#f6f7f9] rounded-2xl p-4 flex flex-col gap-2 min-w-0">
-            <div className="bg-[#0b172d] text-white rounded-xl px-4 py-3">
-              <p className="text-sm font-bold leading-5 break-words">{stage.stage}</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-3">
-              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">User Action</p>
-              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.action}</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-3">
-              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">Feeling</p>
-              <div className="flex items-center gap-2">
-                <span className="text-3xl leading-9">{stage.emoji}</span>
-                <span className="text-xs font-bold leading-[18px] text-[#202631] break-words">{stage.feeling}</span>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-xl p-3">
-              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">Thinking</p>
-              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.thinking}</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-3">
-              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">Touchpoints</p>
-              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.touchpoints}</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-3">
-              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">Pain Point / Friction</p>
-              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.pain}</p>
-            </div>
-
-            <div className="bg-white rounded-xl p-3">
-              <p className="text-[11px] font-bold leading-4 text-[#68727f] mb-1">UX Opportunity</p>
-              <p className="text-xs leading-[18px] text-[#202631] break-words">{stage.opportunity}</p>
-            </div>
-          </article>
+          <JourneyStageCard key={stage.stage} stage={stage} />
         ))}
       </div>
     </div>
@@ -367,9 +374,9 @@ function JourneyCard({ j }: { j: Journey }) {
 
 export default function UserJourneyMap() {
   return (
-    <section>
+    <section className="w-full min-w-0">
       <SectionHeading>User Journey Map</SectionHeading>
-      <div className="flex flex-col gap-16">
+      <div className="flex flex-col gap-12 sm:gap-14 lg:gap-16">
         {journeys.map((j) => (
           <JourneyCard key={j.name} j={j} />
         ))}
