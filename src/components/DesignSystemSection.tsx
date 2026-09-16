@@ -12,7 +12,7 @@ export default function DesignSystemSection() {
 
       <div className="w-full max-w-[1260px] h-auto lg:h-[803px] flex items-center justify-center overflow-hidden rounded-[18px] sm:rounded-[22px] lg:rounded-[24px] shadow-[0_4px_25px_rgba(0,0,0,0.05)] bg-white">
         <img
-          src="/sm.png"
+          src="/Frame 1686561417.webp"
           alt="Design System"
           className="block w-full h-auto lg:h-full object-contain"
         />
