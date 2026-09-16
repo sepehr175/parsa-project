@@ -3,7 +3,8 @@ import React from 'react';
 export default function InformationArchitecture() {
   return (
     <section className="w-full min-w-0 flex flex-col items-start overflow-hidden px-4 sm:px-6 2xl:px-0">
-      <h2 className="text-[28px] sm:text-[32px] md:text-[36px] font-bold text-[#1f2024] mb-6 sm:mb-8 tracking-tight text-left">
+      {/* سایز متن در عرض‌های ۳۸۵ و کمتر به ۲۰ پیکسل کاهش یافت و با whitespace-nowrap در یک خط قفل شد */}
+      <h2 className="text-[20px] min-[386px]:text-[26px] sm:text-[32px] md:text-[36px] font-bold text-[#1f2024] mb-6 sm:mb-8 tracking-tight text-left whitespace-nowrap">
         Information Architecture
       </h2>
       
